@@ -124,8 +124,9 @@ export default function App() {
   };
 
   const deleteAllTodos = async () => {
-    // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setTodos([])
     await storeData([])
   }
@@ -149,7 +150,7 @@ export default function App() {
         }
       }>
         <TextInput placeholder='eg. Go to code' onChangeText={(val)=>setInputVal(val)} onSubmitEditing={addNewTodo} style={styles.inputBox} value={inputVal}/>
-      </View>
+      </View>      
     {/* <Link href={"/stopwatch"}>Go to stopwatch app</Link>       */}
       <View style={styles.listContainer}>
         {/* {
