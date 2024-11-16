@@ -1,9 +1,10 @@
-import { Button, Pressable, StyleSheet, Text, TouchableOpacity, View, Alert, StatusBar, TextInput, ScrollView, FlatList } from 'react-native';
+import { Button, Pressable, StyleSheet, Text, TouchableOpacity, View, Alert, StatusBar, TextInput, ScrollView, FlatList, Platform, UIManager, LayoutAnimation } from 'react-native';
 import List from '../components/list';
 import { useEffect, useState } from 'react';
 import { Link } from 'expo-router';
 import { theme } from '../theme';
 import { getData, storeData } from '../utils/storage';
+import * as Haptics from 'expo-haptics';
 
 type TodoListType = {
   id: string,
@@ -46,13 +47,42 @@ type TodoListType = {
 
 const KEY="todo-app";
 
+if(Platform.OS === 'android'){
+  if(UIManager.setLayoutAnimationEnabledExperimental){
+    UIManager.setLayoutAnimationEnabledExperimental(true)
+  }
+}
+
 export default function App() {
   const [inputVal, setInputVal] = useState<string>("")
-  const [todos, setTodos] = useState<TodoListType[]>([]);
+  const [todos, setTodos] = useState<TodoListType[]>([
+    // {
+    //   id: "1",
+    //   message: "Wake Up",
+    //   isDone: false
+    // },
+    // {
+    //   id: "2",
+    //   message: "Go To Work",
+    //   isDone: true
+    // },
+    // {
+    //   id: "3",
+    //   message: "Go To Code",
+    //   isDone: false
+    // },
+    // {
+    //   id: "4",
+    //   message: "Go To Sleep",
+    //   isDone: false
+    // }
+  ]);
 
   const changeStatus = async (id:string) =>{
-    setTodos(prevState=>prevState.map((td)=>(td.id===id?{...td,isDone:true}:td)))
-    await storeData(todos);
+    const updatedTodos = todos.map((td)=> (td.id===id?{...td,isDone: true}: td))
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setTodos(updatedTodos)
+    await storeData(updatedTodos);
   }
 
   const undoStatus = (id:string) => {
@@ -65,8 +95,10 @@ export default function App() {
       {
         text: "Yes",
         onPress:async () => {
-          setTodos((prevState)=>prevState.map((td)=>td.id===id?{...td,isDone: false}: td))
-          await storeData(todos)
+          const updatedTodos = todos.map((td)=>td.id===id?{...td, isDone: false}: td)
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          setTodos(updatedTodos)
+          await storeData(updatedTodos)
           //console.log(todos);
         }
       }
@@ -74,7 +106,7 @@ export default function App() {
   }
 
   const addNewTodo = async () => {
-    console.log(inputVal);
+    // console.log(inputVal);
     const newTodos=[
       ...todos,
       {
@@ -84,9 +116,18 @@ export default function App() {
     }
     ];
     // console.log(newTodos)
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setTodos(newTodos)    
-    await storeData(newTodos);       
+    await storeData(newTodos); 
+    console.log("Saved Successfully")      
     setInputVal("")
+  };
+
+  const deleteAllTodos = async () => {
+    // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    setTodos([])
+    await storeData([])
   }
 
   useEffect(()=>{
@@ -116,9 +157,18 @@ export default function App() {
             <List key={td.id} {...td} changeStatus={changeStatus} undoStatus={undoStatus}/>
           ))
         } */}
-        <FlatList ListEmptyComponent={<View><Text style={styles.text}>No to for now.</Text></View>} data={todos} renderItem={({item})=>{
+        <FlatList ListEmptyComponent={<View><Text style={styles.text}>No to for now.</Text></View>} data={todos} 
+        renderItem={({item})=>{
           // console.log(item);
-          return <List changeStatus={changeStatus} undoStatus={undoStatus} {...item}/>}} keyExtractor={(item)=>item.id} />
+          return <List changeStatus={changeStatus} undoStatus={undoStatus} {...item}/>}} keyExtractor={(item)=>item.id} ListFooterComponent={
+            <>
+            {
+              todos?.length !== 0 && (<Pressable style={styles.dangerContainer} onPress={deleteAllTodos}>
+                <Text style={styles.textDanger}>Delete All</Text>
+              </Pressable>)
+            }
+            </>
+          }/>
       </View>        
       <StatusBar barStyle={"dark-content"} backgroundColor={"#fff"}/>    
     </View>
@@ -151,7 +201,9 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 2,
     marginTop: 10,
-    marginHorizontal: 10
+    marginHorizontal: 10,
+    width: "100%",
+    paddingHorizontal: 10
   },
   inputBox: {
     borderColor: theme.mintGray,
@@ -161,6 +213,18 @@ const styles = StyleSheet.create({
     marginVertical: 2,
     width: "100%"
   },
+  dangerContainer: {
+    backgroundColor: "red",
+    paddingVertical: 10,
+    marginVertical: 10,
+    borderRadius: 10,
+    width: "100%"
+  },
+  textDanger: {
+    textAlign: "center",
+    fontSize: 16,
+    fontWeight: "bold"
+  }
   // btnText: {
   //   color: 'white',
   //   fontSize: 20
