@@ -25,11 +25,11 @@ const StopWatch = () => {
         await storeData(KEY, updatedEvents);
     }
 
-    const deleteEvent = async (id: string) => {
+    const deleteEvent = async (id: string) => {        
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-        const updatedEvents = events.filter((ev)=>ev.id!==id);
+        const updatedEvents = events.filter((ev) => ev.id !== id);             
         setEvents(updatedEvents);
-        await storeData(KEY, updatedEvents);        
+        await storeData(KEY, updatedEvents);                                   
     }
 
     const nearestEvent = () => {
@@ -57,7 +57,7 @@ const StopWatch = () => {
     },[])
 
     useEffect(()=>{
-        if(events.length > 0){
+        if(events.length >= 0){
             nearestEvent()
         }        
     },[events])    
@@ -69,7 +69,7 @@ const StopWatch = () => {
                 {
                 nearestEv && <CountDownTimer event={nearestEv}/>
                 }
-                <EventList events={events} deleteEvent={deleteEvent}/>
+                <EventList events={events} deleteEvent={deleteEvent}/>                
         </View>
         </KeyboardAvoidingView>
     )
