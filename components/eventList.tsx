@@ -4,14 +4,17 @@ import { Event } from '../app/stopwatch'
 import EventItem from './eventItem'
 
 type EventListProps = {
-  events : Event[]
+  events : Event[];
+  deleteEvent: (id: string) => void;
 }
 
-const EventList = ({events}: EventListProps) => {
+const EventList = ({events, deleteEvent}: EventListProps) => {
+  const sortedEvents = events.sort((a,b)=> a.date.getTime() - b.date.getTime())
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Events</Text>
-      <FlatList data={events} renderItem={({item})=> <EventItem event={item}/>}/>
+      <Text style={styles.title}>Event List</Text>
+      <FlatList data={sortedEvents} renderItem={({item})=> <EventItem event={item} deleteEvent={deleteEvent} />}/>
     </View>
   )
 }
@@ -26,7 +29,7 @@ const styles = StyleSheet.create({
     // backgroundColor: "red"
   },
   title: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: "bold",
     marginBottom: 10    
   }

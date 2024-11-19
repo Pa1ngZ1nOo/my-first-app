@@ -15,14 +15,13 @@ const Creation = () => {
         content: {
           title: "Notification Testing from Button Click!"
         },
-        trigger,
+        trigger: null,
       })
-      let d = (new Date()).getSeconds();
-      console.log("Seconds : ", d);
-      console.log("Notification Sent Successfully!")
-      const scheduledNotifications = await Notifications.getAllScheduledNotificationsAsync();
-      console.log(scheduledNotifications);
-
+      // let d = (new Date()).getSeconds();
+      // console.log("Seconds : ", d);
+      // console.log("Notification Sent Successfully!")
+      // const scheduledNotifications = await Notifications.getAllScheduledNotificationsAsync();
+      // console.log(scheduledNotifications);
     }else {
       Alert.alert("Permission Denied","You need to enable notifications in the app settings to use this feature")
     }

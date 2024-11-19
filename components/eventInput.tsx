@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { Alert, Button, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
 import DateTimePicker from "@react-native-community/datetimepicker"
 import { Event } from '../app/stopwatch'
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 type EventInputProps = {
   addNewEvent : ({name,date} : Event) => void;
@@ -41,17 +42,19 @@ const EventInput = ({addNewEvent}: EventInputProps) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>ADD NEW EVENT</Text> 
-        <TextInput style={styles.eventInput} placeholder='Enter event name' value={eventName} onChangeText={setEventName} />
-        <Pressable style={styles.btn} onPress={()=>setShowPicker(true)}>
-          <Text style={styles.btnText}>SELECT EVENT DATE AND TIME</Text>
-        </Pressable>
+        <View style={styles.inputContainer}>
+          <TextInput style={styles.eventInput} placeholder='Enter event name' value={eventName} onChangeText={setEventName} />
+          <Pressable style={styles.icon} hitSlop={20} onPress={()=>setShowPicker(true)}>
+            <AntDesign name="calendar" size={30} color="#fff" />
+          </Pressable>
+        </View>
         {
           showPicker && (
             <DateTimePicker value={date} mode='date' display='default' onChange={datePickerHandler}/>
           )
         }
         <Pressable style={styles.btnSubmit} onPress={addNewEventHandler}>
-          <Text style={[styles.btnText,{color: "#000"}]}>Add Event</Text>
+          <Text style={styles.btnText}>Add Event</Text>
         </Pressable>
     </View>
   )
@@ -61,20 +64,25 @@ export default EventInput
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
+      // flex: 1,
       width: "100%",
       padding: 16,
+      marginBottom: 20,
       // backgroundColor: "blue"
     },
-    btn: {
-      padding: 10,
-      backgroundColor: "#000",
-      borderRadius: 20
+    inputContainer: {
+      flexDirection: "row",
+      width: "100%",
+      alignItems: "center",     
+      justifyContent: "center",
+      gap: 6,
+      marginBottom: 10,
     },
     btnSubmit: {
       padding: 8,
-      borderWidth: 1,
-      borderColor: '#000',
+      // borderWidth: 1,
+      // borderColor: '#000',
+      backgroundColor: "#000",
       borderRadius: 20,
       marginVertical: 10
     },
@@ -84,6 +92,11 @@ const styles = StyleSheet.create({
       fontWeight: "bold",
       fontSize: 14
     },
+    icon: {
+      backgroundColor: "#000",
+      padding: 6,
+      borderRadius: 6
+    },
     title: {      
       fontSize: 24,
       fontWeight: "bold",
@@ -91,10 +104,11 @@ const styles = StyleSheet.create({
       // textAlign: "center"
     },
     eventInput: {
+        flex: 1,
         padding: 10,
         borderWidth: 1,
         borderColor: '#ccc',
         borderRadius: 6,
-        marginBottom: 10
+        // marginBottom: 10
     }
 })

@@ -25,6 +25,7 @@ const CountDownTimer = ({event}: CountDownTimerProps) => {
 
   return (
     <View style={styles.container}>
+        <Text style={styles.descriptionMuted}>Upcoming nearest event</Text>
         <Text style={styles.bigTitle}>{name}</Text>
         <Text>{daysRemaining >= 0? `${daysRemaining} Days Remaining`: "Event is over"}</Text>
     </View>
@@ -35,17 +36,25 @@ export default CountDownTimer
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        // flex: 1,
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        // backgroundColor: "green"
+        marginBottom: 20
     },
     bigTitle: {
         fontSize: 40,
         fontWeight: "bold",
-        marginVertical: 10
+        marginVertical: 10,
+        color: "orange"
     },
     description: {
         fontSize: 14,
         marginVertical: 2
+    },
+    descriptionMuted: {
+        fontSize: 14,
+        marginVertical: 2,
+        color: "gray"
     }
 })

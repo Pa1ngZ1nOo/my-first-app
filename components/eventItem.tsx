@@ -1,18 +1,30 @@
 import React from 'react'
 import { Event } from '../app/stopwatch'
-import { StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
 import {format} from 'date-fns'
+import { theme } from '../theme'
+import Feather from '@expo/vector-icons/Feather';
 
 type EventItemProps = {
-    event : Event
+    event : Event;
+    deleteEvent: (id: string) => void;
 }
 
-const EventItem = ({event} : EventItemProps) => {
-    const {name, date} = event;
+const EventItem = ({event, deleteEvent} : EventItemProps) => {
+    const {name, date, id} = event;
+
+    const deleteEventHandler = () => {
+        deleteEvent(id)
+    }
   return (
-    <View>
-        <Text style={styles.label}>{name}</Text>
-        <Text style={styles.date}>{format(date, "yyyy-MM-dd")}</Text>
+    <View style={styles.container}>
+        <View style={{flex: 1}}>
+            <Text style={styles.label}>{name}</Text>
+            <Text style={styles.date}>{format(date, "yyyy-MM-dd")}</Text>
+        </View>
+        <Pressable style={styles.icon} hitSlop={20} onPress={deleteEventHandler}>
+            <Feather name="trash" size={26} color="red" />
+        </Pressable>
     </View>
   )
 }
@@ -20,8 +32,15 @@ const EventItem = ({event} : EventItemProps) => {
 export default EventItem
 
 const styles = StyleSheet.create({
+    container: {
+        borderBottomColor: theme.mintGray,
+        borderBottomWidth: 1,
+        paddingVertical: 6,
+        flexDirection: "row",
+        alignItems: "center"
+    },
     label: {
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: "bold",
         marginBottom: 6
     },
@@ -29,5 +48,10 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginBottom: 6,
         color: "gray"
+    },
+    icon: {
+        // backgroundColor: "#000",
+        padding: 6,
+        // borderRadius: 6
     }
 });

@@ -45,7 +45,7 @@ type TodoListType = {
 //   }
 // )
 
-const KEY="todo-app";
+const KEY="@events";
 
 if(Platform.OS === 'android'){
   if(UIManager.setLayoutAnimationEnabledExperimental){
@@ -82,7 +82,7 @@ export default function App() {
     const updatedTodos = todos.map((td)=> (td.id===id?{...td,isDone: true}: td))
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setTodos(updatedTodos)
-    await storeData(updatedTodos);
+    await storeData(KEY, updatedTodos);
   }
 
   const undoStatus = (id:string) => {
@@ -98,7 +98,7 @@ export default function App() {
           const updatedTodos = todos.map((td)=>td.id===id?{...td, isDone: false}: td)
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
           setTodos(updatedTodos)
-          await storeData(updatedTodos)
+          await storeData(KEY, updatedTodos)
           //console.log(todos);
         }
       }
@@ -118,17 +118,16 @@ export default function App() {
     // console.log(newTodos)
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setTodos(newTodos)    
-    await storeData(newTodos); 
+    await storeData(KEY, newTodos); 
     console.log("Saved Successfully")      
     setInputVal("")
   };
 
-  const deleteAllTodos = async () => {
-    
+  const deleteAllTodos = async () => {    
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setTodos([])
-    await storeData([])
+    await storeData(KEY, [])
   }
 
   useEffect(()=>{
