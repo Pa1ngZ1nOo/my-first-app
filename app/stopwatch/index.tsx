@@ -1,23 +1,33 @@
 import { useRouter } from 'expo-router'
-import React from 'react'
+import React, { useState } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import EventInput from '../../components/eventInput';
+import EventList from '../../components/eventList';
+import CountDownTimer from '../../components/countDownTimer';
+
+
+const STORAGE_KEY = "@events";
+export type Event = {
+    id: string,
+    name: string,
+    date: Date
+}
 
 const StopWatch = () => {
-    const router = useRouter()
+    const [events, setEvents] = useState<Event[]>([])
 
-    const gotoOwnApp=()=>{
-        console.log("let's go to own app")
-        router.navigate("/creation")
+    const addNewEvent = (event : Event) => {
+        const updatedEvents = [...events, event];
+        setEvents(updatedEvents);
     }
 
-  return (
-    <View style={styles.container}>
-        <Text>StopWatch</Text>
-        <TouchableOpacity onPress={gotoOwnApp}>
-            <Text>Go to Own App</Text>
-        </TouchableOpacity>
-    </View>
-  )
+    return (
+        <View style={styles.container}>
+            <EventInput addNewEvent={addNewEvent}/>
+            <CountDownTimer event={events[0]}/>
+            <EventList events={events}/>
+        </View>
+    )
 }
 
 export default StopWatch

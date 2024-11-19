@@ -23,7 +23,7 @@ const Layout = () => {
   return (
     <Tabs screenOptions={{tabBarActiveTintColor:"black"}}>
         <Tabs.Screen name="index" options={{title:"Todos",tabBarIcon:({color, size})=><Feather name="list" size={size} color={color} />}} />
-        <Tabs.Screen name="stopwatch" options={{title:"Stopwatch",headerShown:false,tabBarIcon:({color,size})=><AntDesign name="clockcircleo" size={size} color={color} />}} />
+        <Tabs.Screen name="stopwatch" options={{title:"Events",headerShown:false,tabBarIcon:({color,size})=><AntDesign name="clockcircleo" size={size} color={color} />}} />
         <Tabs.Screen name="notifications" options={{title:"Notifications",tabBarIcon:({color,size})=><Ionicons name="notifications-outline" size={size} color={color} />}} />
     </Tabs>
   )

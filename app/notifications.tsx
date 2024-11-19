@@ -1,24 +1,28 @@
 import React from 'react'
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Alert, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { pushNotificationsAsync } from '../utils/push-notifications-async';
 import * as Notifications from "expo-notifications";
 
 const Creation = () => {
 
+  const trigger = new Date(Date.now() + 5 * 1000);
+
   const pushNotification = async () => {
     const result = await pushNotificationsAsync();
     // console.log(result);
-    if(result === "granted"){
+    if(result === "granted"){      
       await Notifications.scheduleNotificationAsync({
         content: {
-          title: "Why Every 5 seconds from the Expo Go!"
+          title: "Notification Testing from Button Click!"
         },
-        trigger: {
-          type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
-          seconds: 5, 
-          repeats : false            
-        }
+        trigger,
       })
+      let d = (new Date()).getSeconds();
+      console.log("Seconds : ", d);
+      console.log("Notification Sent Successfully!")
+      const scheduledNotifications = await Notifications.getAllScheduledNotificationsAsync();
+      console.log(scheduledNotifications);
+
     }else {
       Alert.alert("Permission Denied","You need to enable notifications in the app settings to use this feature")
     }
@@ -26,9 +30,9 @@ const Creation = () => {
 
   return (
     <View style={styles.container}>
-        <Pressable style={styles.button} onPress={pushNotification}>
+        <TouchableOpacity style={styles.button} onPress={pushNotification}>
           <Text style={styles.label}>Push Notification</Text>
-        </Pressable>
+        </TouchableOpacity>
     </View>
   )
 }
