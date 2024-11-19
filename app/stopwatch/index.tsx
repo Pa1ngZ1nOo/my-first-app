@@ -56,10 +56,8 @@ const StopWatch = () => {
         getEvents();
     },[])
 
-    useEffect(()=>{
-        if(events.length >= 0){
-            nearestEvent()
-        }        
+    useEffect(()=>{        
+        nearestEvent()               
     },[events])    
 
     return (
